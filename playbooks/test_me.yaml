@@ -1,0 +1,40 @@
+# Basic provisioning example
+- name: MyAnsible
+  hosts: mycloud
+  become: true
+  become_method: sudo
+  # connection: local
+  vars:
+    ansible_ssh_private_key_file: /home/misaki/Desktop/playbooks/misa.cer
+
+  tasks:
+  # - name: launching AWS instance using Ansible
+  #   ec2:
+  #     key_name: misa
+  #     instance_type: t2.micro
+  #     image: ami-0beb6fc68811e5682
+  #     region: eu-west-2
+  #     wait: yes
+  #     group: launch-wizard-1
+  #     count: 1
+  #     vpc_subnet_id: subnet-0e00b1324effbfca4
+  #     assign_public_ip: yes
+  #     aws_access_key: ***************
+  #     aws_secret_key: ***************
+  #     instance_tags:
+  #       Name: MyTotoro
+  - name: "Update Repository cache"
+    apt:
+      update_cache: true
+      cache_valid_time: 3600
+      force_apt_get: true
+  - name: Install nginx
+    apt:
+      name: nginx
+      state: latest
+    become: true
+
+
+# sudo ansible-playbook test_me.yaml 
+# find / -type f -name "ansible.cfg" 2>/dev/null
+# ansible.cfg --> deprecation_warnings=False
