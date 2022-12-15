@@ -7,6 +7,9 @@
     ansible_ssh_private_key_file: /home/misaki/Desktop/misa.cer
 
   tasks:
+    - name: Update package lists
+      command: apt update
+
     - name: Install Apache web server
       apt:
         name: apache2
@@ -24,5 +27,3 @@
       copy:
         src: index.html
         dest: /var/www/html/
-
-#sudo apt install net-tools 
