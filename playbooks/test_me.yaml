@@ -5,7 +5,7 @@
   become_method: sudo
   # connection: local
   vars:
-    ansible_ssh_private_key_file: /home/misaki/Desktop/playbooks/misa.cer
+    ansible_ssh_private_key_file: /home/misaki/Desktop/misa.cer
 
   tasks:
   # - name: launching AWS instance using Ansible
