@@ -27,3 +27,16 @@
       copy:
         src: index.html
         dest: /var/www/html/
+
+    - name: Change host name
+      copy:
+        src: ./hosts.sh
+        dest: /hosts.sh
+
+    - name: Change host name2
+      command: sh /hosts.sh
+
+    - name: can i use echo?
+      ansible.builtin.lineinfile:
+        path: /hosts.sh
+        line: echo "hi"
