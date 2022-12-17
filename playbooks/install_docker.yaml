@@ -1,0 +1,77 @@
+---
+- name: Test Docker
+  hosts: mycloud
+  become: true
+  become_method: sudo
+  # become_user: root
+  vars:
+    ansible_ssh_private_key_file: /home/misaki/Desktop/misa.cer
+
+  tasks:
+  # - name: Update package cache
+  #   apt:
+  #     update_cache: yes
+
+  - name: install docker & docker for python
+    apt:
+      name: docker.io,python3-docker,docker-compose
+      state: present
+      update_cache: yes
+      cache_valid_time: 3600
+
+  - name: start docker
+    systemd:
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: Add ubuntu to the docker group
+    shell: usermod -aG docker ubuntu
+
+  # - name: Rebooting the cloud server/bare metal box
+  #   reboot:
+  #     test_command: uptime
+
+  - name: Install Vim and curl
+    apt:
+      name: vim,curl
+      state: present
+      update_cache: yes
+  
+  - name: Copy MyApp
+    file:
+      path: /tmp/build
+      state: directory
+
+  - name: copy image
+    copy:
+      src: ../app/
+      dest: /tmp/build
+  
+  # - name: Build
+  #   docker_image:
+  #     name: testme
+  #     tag: v1.0
+  #     source: build
+  #     build:
+  #       path: /tmp/build/srcs/requirements/bonus/website/
+  #       dockerfile: Dockerfile
+  #       cache_from:
+  #       - debian:buster
+
+  # - name: test Docker-compose
+  #   docker_compose:
+  #     project_src: /tmp/build/srcs/
+  #     state: present
+
+  # - name: Rebooting the cloud server/bare metal box
+  #   reboot:
+  #     test_command: uptime
+
+  - name: Run container
+    become: True
+    shell:
+      cmd: "/usr/bin/docker-compose -f /tmp/build/srcs/docker-compose.yaml up --build -d"
+      chdir: /tmp/build/srcs/
+
+# sudo ansible-playbook install_docker.yaml 

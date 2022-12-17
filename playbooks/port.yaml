@@ -1,0 +1,45 @@
+---
+- name: Test Port
+  hosts: mycloud
+  become: true
+  become_method: sudo
+  # become_user: root
+  vars:
+    ansible_ssh_private_key_file: /home/misaki/Desktop/misa.cer
+    ansible_python_interpreter: /usr/bin/python3
+
+
+  tasks:
+  - name: Firewalld Test Task
+    firewalld:
+      service: https
+      state: enabled
+    vars:
+      ansible_python_interpreter: '/usr/bin/python3'
+  # - name: Add port 80 to firewall
+  #   firewall:
+  #     port: 80
+  #     state: enabled
+  #     protocol: tcp
+  # - name: permit traffic in default zone on port 8081/tcp
+  #   ansible.posix.firewalld:
+  #     port: 8081/tcp
+  #     permanent: yes
+  #     state: enabled
+  # - name: Add port 80 to security group
+  #   ec2_group:
+  #     name: my-security-group
+  #     rules:
+  #     - proto: tcp
+  #       from_port: 80
+  #       to_port: 80
+  #       cidr_ip: 0.0.0.0/0
+  #     state: present
+
+
+
+
+
+
+
+
