@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ### Install Ansible Master
 sudo apt install openssh-server -y
 sudo usermod -aG sudo misaki
