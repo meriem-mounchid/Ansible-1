@@ -1,0 +1,30 @@
+# Basic provisioning example
+- name: Mylocal
+  hosts: localhost
+  become: true
+  become_method: sudo
+  connection: local
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+# sudo ansible-playbook mylocal.yaml
+  tasks:
+  - name: Install docker & docker for python
+    apt:
+      name: docker.io,python3-docker,docker-compose
+      state: present
+      update_cache: yes
+      cache_valid_time: 3600
+  - name: Create Path for app
+    file:
+      path: /tmp/build
+      state: directory
+  - name: Copy app
+    copy:
+      src: ./app/
+      dest: /tmp/build
+  - name: Run container
+    become: True
+    shell:
+      cmd: "/usr/bin/docker-compose -f /tmp/build/docker-compose.yaml up --build -d"
+      chdir: /tmp/build/

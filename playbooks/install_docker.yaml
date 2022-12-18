@@ -32,9 +32,9 @@
   #   reboot:
   #     test_command: uptime
 
-  - name: Install Vim and curl
+  - name: Install Vim
     apt:
-      name: vim,curl
+      name: vim
       state: present
       update_cache: yes
   
