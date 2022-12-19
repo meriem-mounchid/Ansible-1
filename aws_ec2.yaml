@@ -1,0 +1,50 @@
+---
+- name: Create EC2 Instance
+  hosts: localhost
+  become: true
+  become_method: sudo
+  connection: local
+  gather_facts: false
+
+  vars:
+    ansible_ssh_private_key_file: /home/misaki/Desktop/misa.cer
+    # ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+  - name: Create an EC2 instance
+    ec2:
+      key_name: misa
+      instance_type: t2.micro
+      image: ami-0beb6fc68811e5682
+      wait: true
+      region: eu-west-2
+      count: 1
+      group: default
+      # rules:
+      #   - proto: tcp
+      #     from_port: 80
+      #     to_port: 80
+      #     cidr_ip: 0.0.0.0/0
+
+      # state: present
+      # aws_access_key: ****
+      # aws_secret_key: ****
+      instance_tags:
+        Name: MyTotoro
+
+  - name: Add the new instance to the host group
+    add_host:
+      hostname: "{{ item.public_ip }}"
+      groupname: launched
+    with_items: "{{ MyTotoro.instances }}"
+
+  - name: Install Apache web server
+    become: true
+    apt:
+      name: apache2
+      state: present
+  - name: Start Apache service
+    become: true
+    service:
+      name: httpd
+      state: started
